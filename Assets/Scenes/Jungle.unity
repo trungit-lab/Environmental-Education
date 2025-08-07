@@ -3001,7 +3001,7 @@ MonoBehaviour:
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
 --- !u!1001 &842037624
 PrefabInstance:
   m_ObjectHideFlags: 0
