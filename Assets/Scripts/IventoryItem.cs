@@ -52,70 +52,13 @@ public class IventoryItem : MonoBehaviour,IPointerEnterHandler,IPointerExitHandl
             if(isConsumable)
             {
                 itemPendingConsumption=gameObject;
-                ConsumingFunction(healthEffect,caloriesEffect,hydrationsEffect);
             }
         }
     }
 
-    private void ConsumingFunction(float healthEffect, float caloriesEffect, float hydrationsEffect)
-    {
-        itemInfoUI.SetActive(false);
-        healthEffectCalculation(healthEffect);
-        caloriesEffectCalculation(caloriesEffect);
-        hydrationsEffectCalculation(hydrationsEffect);
-    }
 
-    private void hydrationsEffectCalculation(float hydrationsEffect)
-    {
-        float hydrationsBeforeConsumption=PlayerStatus.Instance.currentHydrationPercent;
-        float maxHydrations=PlayerStatus.Instance.maxHydrationPercent;
-        if(hydrationsEffect!=0)
-        {
-            if((hydrationsBeforeConsumption+hydrationsEffect)>maxHydrations)
-            {
-                PlayerStatus.Instance.SetHydrations(maxHydrations);
-            }
-            else
-            {
-                PlayerStatus.Instance.SetHydrations(hydrationsBeforeConsumption+hydrationsEffect);
-            }
-        }
-    }
 
-    private void caloriesEffectCalculation(float caloriesEffect)
-    {
-        float caloriesBeforeConsumption=PlayerStatus.Instance.currentCalories;
-        float maxCalories=PlayerStatus.Instance.maxCalories;
-        if(caloriesEffect!=0)
-        {
-            if((caloriesBeforeConsumption+caloriesEffect)>maxCalories)
-            {
-                PlayerStatus.Instance.SetCalories(maxCalories);
-            }
-            else
-            {
-                PlayerStatus.Instance.SetCalories(caloriesBeforeConsumption+caloriesEffect);
-            }
-        }
-    }
-
-    private void healthEffectCalculation(float healthEffect)
-    {
-        float healthBeforeConsumption=PlayerStatus.Instance.currentHealth;
-        float maxHealth=PlayerStatus.Instance.maxHealth;
-
-        if(healthEffect!=0)
-        {
-            if((healthBeforeConsumption+healthEffect)>maxHealth)
-            {
-                PlayerStatus.Instance.SetHealth(maxHealth);
-            }
-            else
-            {
-                PlayerStatus.Instance.SetHealth(healthBeforeConsumption+healthEffect);
-            }
-        }
-    }
+    
 
     public void OnPointerUp(PointerEventData eventData)
     {
