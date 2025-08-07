@@ -27,7 +27,7 @@ namespace AQUAS_Lite
     public bool disableInEditMode;
 #endif
 
-        public void OnWillRenderObject()
+        public void OnPreCull()
         {
 
 #if UNITY_5_3 || UNITY_5_4 || UNITY_5_5
@@ -41,7 +41,7 @@ namespace AQUAS_Lite
             if (!enabled || !GetComponent<Renderer>() || !GetComponent<Renderer>().sharedMaterial || !GetComponent<Renderer>().enabled)
                 return;
 
-            Camera cam = Camera.current;
+            Camera cam = Camera.main;
             if (!cam)
                 return;
 
