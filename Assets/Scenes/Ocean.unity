@@ -583,6 +583,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  animator: {fileID: 0}
 --- !u!143 &1939051317
 CharacterController:
   m_ObjectHideFlags: 0
