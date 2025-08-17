@@ -10,14 +10,11 @@ public class SeedPlanter : MonoBehaviour
     public float plantRange = 5f;
     public LayerMask groundLayerMask = -1;
     
-    [Header("Effects")]
-    public ParticleSystem plantEffect;
-    public AudioClip plantSound;
     
-    [Header("UI")]
-    public GameObject seedSelectionUI;
-    public Transform seedButtonContainer;
-    public GameObject seedButtonPrefab;
+    [Header("UI System")]
+    public Transform systemPanel;              // SystemPanel transform để chứa buttons
+    public GameObject seedButtonPrefab;        // Prefab cho button hạt giống
+    public GameObject seedSelectionPanel;      // Panel chứa toàn bộ UI chọn hạt giống
     
     private Camera playerCamera;
     private AudioSource audioSource;
@@ -33,8 +30,8 @@ public class SeedPlanter : MonoBehaviour
         if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
         
         // Ẩn UI ban đầu
-        if (seedSelectionUI)
-            seedSelectionUI.SetActive(false);
+        if (seedSelectionPanel)
+            seedSelectionPanel.SetActive(false);
     }
     
     void Update()
@@ -82,9 +79,9 @@ public class SeedPlanter : MonoBehaviour
     void OpenSeedSelection()
     {
         isSelectingSeed = true;
-        if (seedSelectionUI)
+        if (seedSelectionPanel)
         {
-            seedSelectionUI.SetActive(true);
+            seedSelectionPanel.SetActive(true);
             CreateSeedButtons();
         }
         
@@ -97,8 +94,8 @@ public class SeedPlanter : MonoBehaviour
     void CloseSeedSelection()
     {
         isSelectingSeed = false;
-        if (seedSelectionUI)
-            seedSelectionUI.SetActive(false);
+        if (seedSelectionPanel)
+            seedSelectionPanel.SetActive(false);
         
         // Khôi phục game
         Time.timeScale = 1f;
@@ -108,26 +105,44 @@ public class SeedPlanter : MonoBehaviour
     
     void CreateSeedButtons()
     {
-        if (!seedButtonContainer || !seedButtonPrefab) return;
-        
-        // Xóa buttons cũ
-        foreach (Transform child in seedButtonContainer)
+        if (!systemPanel || !seedButtonPrefab) 
         {
-            Destroy(child.gameObject);
+            Debug.LogWarning("SystemPanel hoặc SeedButtonPrefab chưa được assign!");
+            return;
         }
         
-        // Tạo buttons mới
+        // Xóa buttons cũ trong SystemPanel
+        foreach (Transform child in systemPanel)
+        {
+            if (child.CompareTag("SeedButton")) // Chỉ xóa buttons hạt giống
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        
+        // Tạo buttons mới trong SystemPanel
         for (int i = 0; i < availableSeeds.Length; i++)
         {
-            GameObject buttonGO = Instantiate(seedButtonPrefab, seedButtonContainer);
+            GameObject buttonGO = Instantiate(seedButtonPrefab, systemPanel);
+            buttonGO.tag = "SeedButton"; // Tag để dễ quản lý
+            
+            // Lấy components
             Button button = buttonGO.GetComponent<Button>();
             Text buttonText = buttonGO.GetComponentInChildren<Text>();
             
+            // Cập nhật text
             if (buttonText)
+            {
                 buttonText.text = $"{i + 1}. {availableSeeds[i].type}";
+            }
             
+            // Thêm event listener
             int seedIndex = i; // Capture index
             button.onClick.AddListener(() => SelectSeed(seedIndex));
+            
+            // Có thể thêm tooltip component sau này nếu cần
+            
+            Debug.Log($"Đã tạo button cho hạt giống: {availableSeeds[i].type}");
         }
     }
     
@@ -143,7 +158,11 @@ public class SeedPlanter : MonoBehaviour
     
     void TryPlantSeed()
     {
-        if (availableSeeds == null || availableSeeds.Length == 0) return;
+        if (availableSeeds == null || availableSeeds.Length == 0) 
+        {
+            Debug.LogWarning("Không có hạt giống nào để trồng!");
+            return;
+        }
         
         RaycastHit hit;
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
@@ -154,7 +173,7 @@ public class SeedPlanter : MonoBehaviour
         }
         else
         {
-            Debug.Log("Không tìm thấy vị trí trồng cây!");
+            Debug.Log("Không tìm thấy vị trí trồng cây! Hãy nhìn vào mặt đất.");
         }
     }
     
@@ -171,20 +190,8 @@ public class SeedPlanter : MonoBehaviour
         PlantGrowth growth = plantRoot.AddComponent<PlantGrowth>();
         growth.Configure(selectedSeed, 0.5f, 0.2f, null);
         
-        // Hiệu ứng trồng cây
-        if (plantEffect)
-        {
-            plantEffect.transform.position = position;
-            plantEffect.Play();
-        }
+       
         
-        // Âm thanh
-        if (plantSound && audioSource)
-        {
-            audioSource.PlayOneShot(plantSound);
-        }
-        
-        Debug.Log($"Đã trồng cây {selectedSeed.type} tại {position}");
     }
     
     // Gizmos để debug
@@ -195,5 +202,11 @@ public class SeedPlanter : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(playerCamera.transform.position, plantRange);
         }
+    }
+    
+    // Helper method để kiểm tra setup
+    void OnValidate()
+    {
+       
     }
 }
