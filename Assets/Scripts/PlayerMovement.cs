@@ -49,17 +49,6 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("Speed", 0f);
         }
 
-        // Handle scene management
-        if(gameObject.transform.position.y <= -10)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
-
-    void FixedUpdate()
-    {
-        // Physics-based operations in FixedUpdate (runs at fixed time intervals)
-        
         // Ground check
         isGround = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         
@@ -75,13 +64,19 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Apply gravity
-        velocity.y += gravity * Time.fixedDeltaTime;
+        velocity.y += gravity * Time.deltaTime;
 
         // Calculate movement
         Vector3 move = transform.right * horizontalInput + transform.forward * verticalInput;
         
-        // Apply movement using CharacterController (physics-based)
-        characterController.Move(move * speed * Time.fixedDeltaTime);
-        characterController.Move(velocity * Time.fixedDeltaTime);
+        // Apply movement using CharacterController with Time.deltaTime for smooth movement
+        characterController.Move(move * speed * Time.deltaTime);
+        characterController.Move(velocity * Time.deltaTime);
+
+        // Handle scene management
+        if(gameObject.transform.position.y <= -10)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
