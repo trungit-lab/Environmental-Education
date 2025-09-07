@@ -190,8 +190,15 @@ public class SeedPlanter : MonoBehaviour
         PlantGrowth growth = plantRoot.AddComponent<PlantGrowth>();
         growth.Configure(selectedSeed, 0.5f, 0.2f, null);
         
-       
+        // Thêm PlantHarvester component để có thể thu hoạch
+        PlantHarvester harvester = plantRoot.AddComponent<PlantHarvester>();
         
+        // Thêm Collider cho plant (nếu chưa có)
+        if (plantRoot.GetComponent<Collider>() == null)
+        {
+            SphereCollider plantCollider = plantRoot.AddComponent<SphereCollider>();
+            plantCollider.radius = 0.5f; // Bán kính collider cho plant
+        }
     }
     
     // Gizmos để debug

@@ -138,27 +138,25 @@ public class PlantGrowth : MonoBehaviour
 
     void UpdateStageScale()
     {
-        if (!currentStageGO) return;
+        if (!currentStageGO || !definition || definition.stages == null || currentStageIndex < 0 || currentStageIndex >= definition.stages.Length) return;
 
-        float stageStart = definition.stages[currentStageIndex].threshold;
-        float stageEnd = (currentStageIndex < definition.stages.Length - 1)
-                       ? definition.stages[currentStageIndex + 1].threshold
-                       : 1f;
-
-        float span = Mathf.Max(0.0001f, stageEnd - stageStart);
-        float t = Mathf.Clamp01((progress - stageStart) / span);
-
-        if (stageScaleCurve != null && stageScaleCurve.keys.Length > 0)
-            t = Mathf.Clamp01(stageScaleCurve.Evaluate(t));
-
-        // Sử dụng firstScale để linh hoạt với các loại cây
-        Vector3 originalScale = definition.stages[currentStageIndex].prefab.transform.localScale;
-        Vector3 targetScale = originalScale;
-        Vector3 startScale = Vector3.Lerp(Vector3.zero, originalScale, firstScale);
+        var stage = definition.stages[currentStageIndex];
+        float scaleProgress = Mathf.InverseLerp(stage.threshold, 
+            currentStageIndex + 1 < definition.stages.Length ? definition.stages[currentStageIndex + 1].threshold : 1f, 
+            progress);
         
-        currentStageGO.transform.localScale = Vector3.Lerp(startScale, targetScale, t);
+        Vector3 targetScale = Vector3.Lerp(stage.firstScale, stage.targetScale, scaleProgress);
+        currentStageGO.transform.localScale = targetScale;
     }
 
-    public void ApplyWater(float amount)  { moisture  = Mathf.Clamp01(moisture  + amount); }
-    public void ApplyFertilizer(float amount) { nutrients = Mathf.Clamp01(nutrients + amount); }
+    // Thêm methods để tưới nước và bón phân
+    public void ApplyWater(float amount)
+    {
+        moisture = Mathf.Clamp01(moisture + amount);
+    }
+
+    public void ApplyFertilizer(float amount)
+    {
+        nutrients = Mathf.Clamp01(nutrients + amount);
+    }
 }
