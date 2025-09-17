@@ -2269,7 +2269,7 @@ GameObject:
   - component: {fileID: 705507997}
   - component: {fileID: 705507996}
   - component: {fileID: 705507998}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2725,7 +2725,7 @@ GameObject:
   - component: {fileID: 789552924}
   - component: {fileID: 789552923}
   - component: {fileID: 789552922}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5635,7 +5635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1637980030
 Transform:
   m_ObjectHideFlags: 0
