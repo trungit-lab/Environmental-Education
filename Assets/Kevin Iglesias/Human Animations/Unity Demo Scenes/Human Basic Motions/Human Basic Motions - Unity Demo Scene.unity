@@ -745,6 +745,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Doutor
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 6b6abb10bf357b845b2d3b3da8ccde48, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 75ad1132c7491d449bae7351741793ec, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
